@@ -127,21 +127,28 @@ const KEYS = {
               }
           },
           render() {
-              this.ctx.clearRect(0, 0, this.width, this.height);
-              this.ctx.drawImage(this.sprites.background, 0, 0);
-              this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height,
-                  this.ball.x, this.ball.y, this.ball.width, this.ball.height);
-              this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
-              this.renderBlocks();
-              this.ctx.fillText("Score: " + this.score, 15, 20);
-          },
-          renderBlocks() {
-              for (let block of this.blocks) {
-                  if (block.active) {
-                      this.ctx.drawImage(this.sprites.block, block.x, block.y);
-                  }
-              }
-          },
+                    
+                    this.ctx.fillStyle = "#000000";
+                    this.ctx.fillRect(0, 0, this.width, this.height);
+                
+                    
+                    this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height,
+                        this.ball.x, this.ball.y, this.ball.width, this.ball.height);
+                    this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
+                    this.renderBlocks();
+                    this.ctx.fillText("Score: " + this.score, 15, 20);
+                },
+                
+                renderBlocks() {
+                    for (let block of this.blocks) {
+                        if (block.active) {
+                            
+                            this.ctx.fillStyle = "#800080"; 
+                            this.ctx.fillRect(block.x, block.y, block.width, block.height);
+                        }
+                    }
+                },
+                
           start: function() {
               this.init();
               this.preload(() => {
