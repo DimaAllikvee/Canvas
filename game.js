@@ -84,6 +84,6 @@ let game = {
                   this.create();
                   this.run();
               });
-          }
-      };
+           }
+       };
       
