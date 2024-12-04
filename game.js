@@ -1,3 +1,4 @@
+
 const KEYS = {
           LEFT: 37,
           RIGHT: 39,
@@ -24,14 +25,14 @@ const KEYS = {
               this.setEvents();
           },
           setEvents() {
-              window.addEventListener("keydown", (e) => {
+              window.addEventListener("keydown", e => {
                   if (e.keyCode === KEYS.SPACE) {
                       this.platform.fire();
                   } else if (e.keyCode === KEYS.LEFT || e.keyCode === KEYS.RIGHT) {
                       this.platform.start(e.keyCode);
                   }
               });
-              window.addEventListener("keyup", () => {
+              window.addEventListener("keyup", e => {
                   this.platform.stop();
               });
           },
@@ -44,7 +45,6 @@ const KEYS = {
                       callback();
                   }
               };
-      
               for (let key in this.sprites) {
                   this.sprites[key] = new Image();
                   this.sprites[key].src = "img/" + key + ".png";
@@ -67,6 +67,7 @@ const KEYS = {
           update() {
               this.collideBlocks();
               this.collidePlatform();
+              this.ball.collideWorldBounds();
               this.platform.move();
               this.ball.move();
           },
@@ -92,11 +93,8 @@ const KEYS = {
           render() {
               this.ctx.clearRect(0, 0, this.width, this.height);
               this.ctx.drawImage(this.sprites.background, 0, 0);
-              this.ctx.drawImage(
-                  this.sprites.ball,
-                  0, 0, this.ball.width, this.ball.height,
-                  this.ball.x, this.ball.y, this.ball.width, this.ball.height
-              );
+              this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width, this.ball.height, 
+                                 this.ball.x, this.ball.y, this.ball.width, this.ball.height);
               this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
               this.renderBlocks();
           },
@@ -143,24 +141,51 @@ const KEYS = {
               let x = this.x + this.dx;
               let y = this.y + this.dy;
       
-              if (
-                  x + this.width > element.x &&
+              if (x + this.width > element.x &&
                   x < element.x + element.width &&
                   y + this.height > element.y &&
-                  y < element.y + element.height
-              ) {
+                  y < element.y + element.height) {
                   return true;
               }
               return false;
+          },
+          collideWorldBounds() {
+              let x = this.x + this.dx;
+              let y = this.y + this.dy;
+      
+              let ballLeft = x;
+              let ballRight = ballLeft + this.width;
+              let ballTop = y;
+              let ballBottom = ballTop + this.height;
+      
+              let worldLeft = 0;
+              let worldRight = game.width;
+              let worldTop = 0;
+              let worldBottom = game.height;
+      
+              if (ballLeft < worldLeft) {
+                  this.x = 0;
+                  this.dx = this.velocity;
+              } else if (ballRight > worldRight) {
+                  this.x = worldRight - this.width;
+                  this.dx = -this.velocity;
+              } else if (ballTop < worldTop) {
+                  this.y = 0;
+                  this.dy = this.velocity;
+              } else if (ballBottom > worldBottom) {
+                  console.log('game over');
+              }
           },
           bumpBlock(block) {
               this.dy *= -1;
               block.active = false;
           },
           bumpPlatform(platform) {
-              this.dy *= -1;
-              let touchX = this.x + this.width / 2;
-              this.dx = this.velocity * platform.getTouchOffset(touchX);
+              if (this.dy > 0) {
+                  this.dy = -this.velocity;
+                  let touchX = this.x + this.width / 2;
+                  this.dx = this.velocity * platform.getTouchOffset(touchX);
+              }
           }
       };
       
