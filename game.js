@@ -11,8 +11,8 @@ const KEYS = {
           ball: null,
           score: 0,
           blocks: [],
-          rows: 4,
-          cols: 8,
+          rows: 6,
+          cols: 12,
           width: 640,
           height: 360,
           sprites: {
