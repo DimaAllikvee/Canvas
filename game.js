@@ -169,7 +169,7 @@ const KEYS = {
       game.ball = {
           dx: 0,
           dy: 0,
-          velocity: 3,
+          velocity: 6,
           x: 320,
           y: 280,
           width: 20,
